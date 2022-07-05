@@ -1,0 +1,68 @@
+import time
+import logging
+from multiprocessing import *
+from watchdog.observers import Observer
+from watchdog.events import LoggingEventHandler
+
+
+# initialization
+event_handler = LoggingEventHandler()
+observer = Observer()
+folder1 = r"C:\Users\Anu\Triassic solutions\watching program\folder1"
+folder2 = r"C:\Users\Anu\Triassic solutions\watching program\folder2"
+
+
+class Folder1(Process):
+    """
+    Monitor folder 1 using multiprocessing
+    """
+    def __init__(self, folder):
+        super(Folder1, self).__init__()
+        self.folder = folder
+
+    def run(self):
+        logging.basicConfig(level=logging.INFO,
+                            format='%(asctime)s - %(message)s',
+                            datefmt='%Y-%m-%d %H:%M:%S')
+        observer.schedule(event_handler, self.folder, recursive=True)
+        observer.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
+
+
+class Folder2(Process):
+    """
+        Monitor folder 2 using multiprocessing
+    """
+    def __init__(self, folder):
+        super(Folder2, self).__init__()
+        self.folder = folder
+
+    def run(self):
+        logging.basicConfig(level=logging.INFO,
+                            format='%(asctime)s - %(message)s',
+                            datefmt='%Y-%m-%d %H:%M:%S')
+        observer.schedule(event_handler, self.folder, recursive=True)
+        observer.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
+
+
+if __name__ == "__main__":
+    object1 = Folder1(folder1)
+    object2 = Folder2(folder2)
+
+    object1.start()
+    time.sleep(0.2)
+    object2.start()
+
+    object1.join()
+    object2.join()
