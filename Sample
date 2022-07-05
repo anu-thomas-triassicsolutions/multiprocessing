@@ -1,0 +1,25 @@
+import time
+import multiprocessing
+
+
+def add(num1, num2):
+    print("-------Printing sum of user input-------")
+    time.sleep(2)
+    print(num1, "+", num2, "=", num1+num2)
+
+
+def product(num1, num2):
+    print("-------Printing Product of user input-------")
+    time.sleep(2)
+    print(num1, "x", num2, "=", num1*num2)
+
+
+if __name__ == "__main__":
+    number1 = 3
+    number2 = 5
+    m1 = multiprocessing.Process(target=add, args=(number1, number2,))
+    m2 = multiprocessing.Process(target=product, args=(number1, number2,))
+    m1.start()
+    m2.start()
+    m1.join()
+    m2.join()
